@@ -1,7 +1,7 @@
 # Real-Time FFT Audio Visualizer
 
-![Project Banner](https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop)
-*(Note: The image above is a placeholder. Please replace it with a screenshot of your running application.)*
+![Project Banner](https://github.com/user-attachments/assets/f0743548-bd09-4f78-be4c-3fa8b45e7830)
+
 
 A Python-based application that performs real-time spectral analysis of audio signals and renders a reactive geometric visualization.
 
@@ -13,7 +13,6 @@ This project was developed to demonstrate the practical implementation of the **
 - [Theoretical Background](#-theoretical-background)
 - [Installation & Setup](#-installation--setup)
 - [Usage](#-usage)
-- [Project Structure](#-project-structure)
 
 ## 🔭 Overview
 The application captures raw audio data from the microphone, processes it from the Time Domain to the Frequency Domain using a custom recursive FFT implementation, and maps the resulting frequency magnitudes to a polar coordinate system.
@@ -94,6 +93,7 @@ python -m venv venv
 # 2. Activate virtual environment
 # Windows:
 venv\Scripts\activate
+
 # macOS/Linux:
 source venv/bin/activate
 ```
@@ -118,8 +118,3 @@ python main.py
 The application will launch in fullscreen mode. Play some music or speak into the microphone to see the visualization.
 **Controls:** Press ESC to exit the application.
 
-## 📂 Project Structure
-.
-├── main.py # Entry point, custom FFT logic, and visualization loop
-├── requirements.txt # Python dependencies
-└── README.md # Documentation
