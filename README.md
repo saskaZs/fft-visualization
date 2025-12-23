@@ -1,32 +1,38 @@
 # Real-Time FFT Audio Visualizer
 
+![Project Banner](https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop)
+*(Note: The image above is a placeholder. Please replace it with a screenshot of your running application.)*
+
 A Python-based application that performs real-time spectral analysis of audio signals and renders a reactive geometric visualization.
 
-This project was developed to demonstrate the practical implementation of the **Cooley-Tukey Fast Fourier Transform (FFT)** algorithm and its application in digital signal processing (DSP) and computer graphics.
+This project was developed to demonstrate the practical implementation of the **Cooley-Tukey Fast Fourier Transform (FFT)** algorithm and its application in digital signal processing (DSP) and computer graphics, without relying on external FFT libraries.
 
 ## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Theoretical Background](#theoretical-background)
-- [Installation & Setup](#installation--setup)
-- [Usage](#usage)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Theoretical Background](#-theoretical-background)
+- [Installation & Setup](#-installation--setup)
+- [Usage](#-usage)
+- [Project Structure](#-project-structure)
 
 ## 🔭 Overview
-The application captures raw audio data from the microphone, processes it from the Time Domain to the Frequency Domain using a custom recursive FFT implementation, and maps the resulting frequency magnitudes to a polar coordinate system for visualization.
+The application captures raw audio data from the microphone, processes it from the Time Domain to the Frequency Domain using a custom recursive FFT implementation, and maps the resulting frequency magnitudes to a polar coordinate system.
+
+The result is a "digital mandala" that responds to music in real-time, visualizing bass, mid, and treble frequencies through radius, color, and motion.
 
 ## 🚀 Features
-* **Custom Signal Processing:** Implements the recursive Cooley-Tukey algorithm (Radix-2) instead of relying solely on `numpy.fft`.
-* **Real-Time Rendering:** Utilizes Pygame for high-performance 60 FPS graphics.
-* **Spectral Leakage Reduction:** Applies a Hanning Window function to the input buffer.
+* **Custom Signal Processing:** Implements the recursive Cooley-Tukey algorithm (Radix-2) from scratch.
+* **Real-Time Rendering:** Utilizes **Pygame** for high-performance 60 FPS graphics.
+* **Spectral Leakage Reduction:** Applies a **Hanning Window** function to the input buffer.
 * **Reactive Visuals:**
     * **Beat Detection:** Dynamic rotation and color shifts based on average signal amplitude.
     * **Visual Persistence:** Implements a trail effect using alpha blending to visualize signal decay.
-    * **Radial Symmetry:** Maps frequency data to a 12-segment mandala pattern.
+    * **Radial Symmetry:** Maps frequency data to a 12-segment polar pattern.
 
-## 🧠 Theoretical Background (Deep Dive)
+## 🧠 Theoretical Background
 
 ### 1. The Fast Fourier Transform (FFT)
-The core of this project is the transformation of discrete time-domain signals into the frequency domain. The Discrete Fourier Transform (DFT) is defined as:
+The core of this project is the transformation of discrete time-domain signals into the frequency domain. The **Discrete Fourier Transform (DFT)** is defined as:
 
 $$X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i 2\pi k n / N}$$
 
@@ -41,26 +47,79 @@ Direct computation of the DFT has a time complexity of $O(N^2)$. To optimize thi
     Where $W_N^k = e^{-i 2\pi k / N}$ is the "Twiddle Factor".
 
 ### 2. Windowing Function
-Before processing, raw audio chunks are multiplied by a **Hanning Window**.
+Before processing, raw audio chunks are multiplied by a **Hanning Window**:
+
 $$w(n) = 0.5 \left(1 - \cos\left(\frac{2\pi n}{N-1}\right)\right)$$
-**Purpose:** This tapers the signal to zero at the edges of the sample window, reducing discontinuities and minimizing "spectral leakage" (noise) in the frequency analysis.
+
+**Purpose:** This tapers the signal to zero at the edges of the sample window (512 samples), reducing discontinuities. This minimizes "spectral leakage" (noise) in the frequency analysis.
 
 ### 3. Visualization Mapping
-The visualization maps the linear frequency array to a polar coordinate system $(r, \theta)$:
+The visualization maps the linear frequency array to a **Polar Coordinate System** ($r, \theta$):
+
 * **Angle ($\theta$):** Determined by the symmetry index (12 segments) and a global rotation variable.
 * **Radius ($r$):** Corresponds to the frequency bin index, scaled non-linearly by the amplitude ($A^{1.8}$) to emphasize strong beats.
-* **Color (HSV):** Hue is determined by the frequency index, while brightness (Value) is driven by signal amplitude.
+* **Color (HSV):**
+    * *Hue:* Determined by the frequency index (mapping pitch to color).
+    * *Brightness (Value):* Driven by signal amplitude (louder = brighter).
 
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-* Python 3.8 or higher
-* PortAudio library (required for PyAudio)
+* **Python 3.8** or higher
+* **PortAudio** library (Required for PyAudio to access the microphone)
 
-### Step 1: Install System Dependencies
-**Windows:**
-Usually not required (PyAudio wheels are included).
+### Step 1: Install System Dependencies (PortAudio)
 
-**macOS:**
+* **Windows:**
+    Usually not required (PyAudio binary wheels include PortAudio).
+    
+* **macOS:**
+    ```bash
+    brew install portaudio
+    ```
+
+* **Linux (Ubuntu/Debian):**
+    ```bash
+    sudo apt-get install python3-pyaudio portaudio19-dev
+    ```
+
+### Step 2: Set up Python Environment
+
+It is recommended to use a virtual environment to manage dependencies.
+
 ```bash
-brew install portaudio
+# 1. Create virtual environment
+python -m venv venv
+
+# 2. Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+
+With the virtual environment activated, install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+(Ensure requirements.txt contains: pyaudio, numpy, pygame)
+
+## 💻 Usage
+Ensure your microphone is set as the default recording device in your OS settings.
+Run the main script:
+
+```bash
+python main.py
+```
+
+The application will launch in fullscreen mode. Play some music or speak into the microphone to see the visualization.
+**Controls:** Press ESC to exit the application.
+
+## 📂 Project Structure
+.
+├── main.py # Entry point, custom FFT logic, and visualization loop
+├── requirements.txt # Python dependencies
+└── README.md # Documentation
